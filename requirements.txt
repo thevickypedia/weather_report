@@ -1,0 +1,3 @@
+pytemperature
+geopy
+certifi
