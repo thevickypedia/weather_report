@@ -13,4 +13,6 @@ response = urllib.request.urlopen(url)
 
 parseResponse = json.loads(response.read())
 
-print(parseResponse)
+temperature = parseResponse['main']['temp']
+weather = parseResponse['weather'][0]['description']
+print(temperature, weather)
