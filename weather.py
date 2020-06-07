@@ -53,11 +53,11 @@ def result():
     temp_c = float(round(pytemperature.k2c(temperature), 2))
     temp_feel_f = float(round(pytemperature.k2f(feels_like), 2))
     temp_feel_c = float(round(pytemperature.k2c(feels_like), 2))
-    temp_min = float(round(pytemperature.k2c(temp_mn), 2))
-    temp_max = float(round(pytemperature.k2c(temp_mx), 2))
+    temp_min = float(round(pytemperature.k2f(temp_mn), 2))
+    temp_max = float(round(pytemperature.k2f(temp_mx), 2))
 
     output = (f'{city}, {location()}, {country}\n\nCurrent Temperature: {temp_f}°F\n'
-              f'Feels Like: {temp_feel_f}°F\nMinimum: {temp_min}°F Maximum: {temp_max}°F\n'
+              f'Feels Like: {temp_feel_f}°F\nHigh: {temp_max}°F Low: {temp_min}°F\n'
               f'Condition: {weather}')
 
     return output
