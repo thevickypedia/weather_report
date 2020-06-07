@@ -1,5 +1,6 @@
 import urllib.request
 import json
+import pytemperature
 import os
 
 api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
@@ -15,4 +16,5 @@ parseResponse = json.loads(response.read())
 
 temperature = parseResponse['main']['temp']
 weather = parseResponse['weather'][0]['description']
-print(temperature, weather)
+
+print(float(round(pytemperature.k2f(temperature), 2)))
