@@ -14,34 +14,35 @@ city = 'Springfield'
 
 
 def parseResponse():
+    """This function gets the raw weather information"""
     api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
     api_key = os.getenv('api_key')
-    url = api_endpoint + "?q=" + city + "&appid=" + api_key
-    response = urllib.request.urlopen(url)
-    parse_response = json.loads(response.read())
+    url = api_endpoint + "?q=" + city + "&appid=" + api_key  # creates an url
+    response = urllib.request.urlopen(url)  # sends request to the url created
+    parse_response = json.loads(response.read())  # loads the response in a json
     return parse_response
 
 
-parseResponse = parseResponse()
-
-
 def location():
+    """This function gets the location information using reverse geocoding"""
     # This is to ensure your request to geopy goes through a cert
     ctx = ssl.create_default_context(cafile=certifi.where())
     geopy.geocoders.options.default_ssl_context = ctx
-
+    # extracts latitude and longitude information
     coordinates = parseResponse['coord']
     lon = (coordinates['lon'])
     lat = (coordinates['lat'])
+    # gets location information using the latitude and longitude values
     geo_locator = Nominatim(scheme='http', user_agent='test/1', timeout=3)
     locator = geo_locator.reverse(f'{lat}, {lon}')
-    current_location = locator.address
+    current_location = locator.address  # extracts the address part
     c_l = current_location.split(', ')
-    county = f'{c_l[4]}, {c_l[5]}, {c_l[7]}'
+    county = f'{c_l[4]}, {c_l[5]}, {c_l[7]}'  # gets only the county, state and/or country information
     return county
 
 
 def result():
+    """This function is to get detailed weather information"""
     country = parseResponse['sys']['country']
     temperature = parseResponse['main']['temp']
     weather = parseResponse['weather'][0]['description']
@@ -56,7 +57,7 @@ def result():
     temp_min = float(round(pytemperature.k2f(temp_mn), 2))
     temp_max = float(round(pytemperature.k2f(temp_mx), 2))
 
-    output = (f'{city}, {location()}, {country}\n\nCurrent Temperature: {temp_f}°F\n'
+    output = (f'{city}, {location}, {country}\n\nCurrent Temperature: {temp_f}°F\n'
               f'Feels Like: {temp_feel_f}°F\nHigh: {temp_max}°F Low: {temp_min}°F\n'
               f'Condition: {weather}')
 
@@ -66,5 +67,7 @@ def result():
 if __name__ == '__main__':
     now = datetime.now()
     dt_string = now.strftime("%A, %B %d, %Y %I:%M %p")
+    parseResponse = parseResponse()
+    location = location()
     print(dt_string)
     print(result())
