@@ -1,17 +1,18 @@
 import json
 import os
 import ssl
-import urllib.request
 import urllib.parse
+import urllib.request
 from datetime import datetime
 
 import certifi
 import geopy.geocoders
 import pytemperature
-from geopy.geocoders import Nominatim
 from bs4 import BeautifulSoup as bs
+from geopy.geocoders import Nominatim
+
 # city = input('Enter city:\n')
-city = 'Springfild'
+city = 'Springfield'
 
 
 def parseResponse():
@@ -67,7 +68,10 @@ def location():
     locator = geo_locator.reverse(f'{lat}, {lon}')
     current_location = locator.address  # extracts the address part
     c_l = current_location.split(', ')
-    county = f'{c_l[4]}, {c_l[5]}, {c_l[7]}'  # gets only the county, state and/or country information
+    try:
+        county = f'{c_l[-5]}, {c_l[-4]}, {c_l[-3]}, {c_l[-1]}'  # gets only the county, state and/or country information
+    except IndexError:
+        county = current_location
     return county
 
 
@@ -87,7 +91,7 @@ def result():
     temp_min = float(round(pytemperature.k2f(temp_mn), 2))
     temp_max = float(round(pytemperature.k2f(temp_mx), 2))
 
-    output = (f'{city}, {location}, {country}\n\nCurrent Temperature: {temp_f}°F\n'
+    output = (f'{location}, {country}\n\nCurrent Temperature: {temp_f}°F\n'
               f'Feels Like: {temp_feel_f}°F\nHigh: {temp_max}°F Low: {temp_min}°F\n'
               f'Condition: {weather}')
 
