@@ -2,15 +2,16 @@ import json
 import os
 import ssl
 import urllib.request
+import urllib.parse
 from datetime import datetime
 
 import certifi
 import geopy.geocoders
 import pytemperature
 from geopy.geocoders import Nominatim
-
+from bs4 import BeautifulSoup as bs
 # city = input('Enter city:\n')
-city = 'Springfield'
+city = 'Springfld'
 
 
 def parseResponse():
@@ -23,7 +24,25 @@ def parseResponse():
         parse_response = json.loads(response.read())  # loads the response in a json
         return parse_response
     except:
-        print('Make sure you entered the right city name.')
+        if len(city) < 2:
+            print('Please enter a city name to continue.')
+        else:
+            headers = {'User-Agent': "Mozilla/5.0 (X11; Linux i686)"}
+            values = {'q': f'{city}'}
+            data = urllib.parse.urlencode(values)
+            url = 'https://www.google.com/search?' + data
+            req = urllib.request.Request(url, headers=headers)
+            resp = urllib.request.urlopen(req)
+            resp_data = resp.read()
+            soup = bs(resp_data, 'html.parser')
+            suggest = f"Try this instead of {city}:\n"
+            for data in soup.find_all('div', {'class': 'Pg70bf Uv67qb'}):
+                for a in data.find_all('a'):
+                    url_ = (a.get('href'))
+                    # print(a.text)
+                    if url_.startswith('https'):
+                        suggest += (url_.split('=')[1].strip('&um'))
+            print(suggest)
         exit()
 
 
