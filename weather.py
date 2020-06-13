@@ -9,7 +9,7 @@ import geopy.geocoders
 import pytemperature
 from geopy.geocoders import Nominatim
 
-# cities = input('Enter city:\n')
+# city = input('Enter city:\n')
 city = 'Springfield'
 
 
@@ -18,9 +18,13 @@ def parseResponse():
     api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
     api_key = os.getenv('api_key')
     url = api_endpoint + "?q=" + city + "&appid=" + api_key  # creates an url
-    response = urllib.request.urlopen(url)  # sends request to the url created
-    parse_response = json.loads(response.read())  # loads the response in a json
-    return parse_response
+    try:
+        response = urllib.request.urlopen(url)  # sends request to the url created
+        parse_response = json.loads(response.read())  # loads the response in a json
+        return parse_response
+    except:
+        print('Make sure you entered the right city name.')
+        exit()
 
 
 def location():
@@ -69,5 +73,5 @@ if __name__ == '__main__':
     dt_string = now.strftime("%A, %B %d, %Y %I:%M %p")
     parseResponse = parseResponse()
     location = location()
-    print(dt_string)
+    print(f'{dt_string}\n')
     print(result())
