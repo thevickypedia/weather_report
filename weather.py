@@ -11,7 +11,7 @@ import pytemperature
 from geopy.geocoders import Nominatim
 from bs4 import BeautifulSoup as bs
 # city = input('Enter city:\n')
-city = 'pondichery'
+city = 'Springfild'
 
 
 def parseResponse():
@@ -24,8 +24,9 @@ def parseResponse():
         parse_response = json.loads(response.read())  # loads the response in a json
         return parse_response
     except:
-        if len(city) < 2:
+        if len(city) < 1:
             print('Please enter a city name to continue.')
+            exit()
         else:
             headers = {'User-Agent': "Mozilla/5.0 (X11; Linux i686)"}
             values = {'q': f'{city}'}
@@ -38,9 +39,18 @@ def parseResponse():
             data = soup.find_all('div', {'class': 'Pg70bf Uv67qb'})
             raw = data[0].find_all('a')
             url_ = raw[0].get('href')
-            suggested_city = (url_.split('=')[1].strip('&source').strip('&um'))
-            print(f"Try '{suggested_city}' instead of '{city}'")
-            exit()
+            suggested_city = (url_.split('=')[1].replace('&source', '').replace('&um', ''))
+            print(f"Trying '{suggested_city}' instead of '{city}'\n")
+            try:
+                api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
+                api_key = os.getenv('api_key')
+                url = api_endpoint + "?q=" + suggested_city + "&appid=" + api_key  # creates an url
+                response = urllib.request.urlopen(url)  # sends request to the url created
+                parse_response = json.loads(response.read())  # loads the response in a json
+                return parse_response
+            except:
+                print('Please try with a valid city name.')
+                exit()
 
 
 def location():
