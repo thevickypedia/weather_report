@@ -29,18 +29,21 @@ def parseResponse():
             print('Please enter a city name to continue.')
             exit()
         else:
+            # passes headers to access browser
             headers = {'User-Agent': "Mozilla/5.0 (X11; Linux i686)"}
+            # stores incorrect city value in the format that can combined to an url
             values = {'q': f'{city}'}
+            # parses the stored value and generates a url code
             data = urllib.parse.urlencode(values)
-            url = 'https://www.google.com/search?' + data
-            req = urllib.request.Request(url, headers=headers)
+            url = f'https://www.google.com/search?{data}'
+            req = urllib.request.Request(url, headers=headers)  # sends a request tot he url
             resp = urllib.request.urlopen(req)
-            resp_data = resp.read()
-            soup = bs(resp_data, 'html.parser')
-            data = soup.find_all('div', {'class': 'Pg70bf Uv67qb'})
-            raw = data[0].find_all('a')
-            url_ = raw[0].get('href')
-            suggested_city = (url_.split('=')[1].replace('&source', '').replace('&um', ''))
+            resp_data = resp.read()  # reads the response
+            soup = bs(resp_data, 'html.parser')  # html parsing
+            data = soup.find_all('div', {'class': 'Pg70bf Uv67qb'})  # looks for the right class under div
+            raw = data[0].find_all('a')  # looks for tag <a></a>
+            url_ = raw[0].get('href')  # gets the href url eg: https://maps.google.com/search?q:{suggestion}
+            suggested_city = (url_.split('=')[1].replace('&source', '').replace('&um', ''))  # extracts value from url
             print(f"Trying '{suggested_city}' instead of '{city}'\n")
             try:
                 api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
@@ -71,7 +74,7 @@ def location():
     try:
         county = f'{c_l[-5]}, {c_l[-4]}, {c_l[-3]}, {c_l[-1]}'  # gets only the county, state and/or country information
     except IndexError:
-        county = current_location
+        county = current_location  # if raised index error stores the entire address here
     return county
 
 
@@ -85,9 +88,7 @@ def result():
     temp_mx = parseResponse['main']['temp_max']
 
     temp_f = float(round(pytemperature.k2f(temperature), 2))
-    temp_c = float(round(pytemperature.k2c(temperature), 2))
     temp_feel_f = float(round(pytemperature.k2f(feels_like), 2))
-    temp_feel_c = float(round(pytemperature.k2c(feels_like), 2))
     temp_min = float(round(pytemperature.k2f(temp_mn), 2))
     temp_max = float(round(pytemperature.k2f(temp_mx), 2))
 
