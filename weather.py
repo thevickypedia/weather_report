@@ -11,7 +11,7 @@ import pytemperature
 from geopy.geocoders import Nominatim
 from bs4 import BeautifulSoup as bs
 # city = input('Enter city:\n')
-city = 'Springfld'
+city = 'pondichery'
 
 
 def parseResponse():
@@ -35,15 +35,12 @@ def parseResponse():
             resp = urllib.request.urlopen(req)
             resp_data = resp.read()
             soup = bs(resp_data, 'html.parser')
-            suggest = f"Try this instead of {city}:\n"
-            for data in soup.find_all('div', {'class': 'Pg70bf Uv67qb'}):
-                for a in data.find_all('a'):
-                    url_ = (a.get('href'))
-                    # print(a.text)
-                    if url_.startswith('https'):
-                        suggest += (url_.split('=')[1].strip('&um'))
-            print(suggest)
-        exit()
+            data = soup.find_all('div', {'class': 'Pg70bf Uv67qb'})
+            raw = data[0].find_all('a')
+            url_ = raw[0].get('href')
+            suggested_city = (url_.split('=')[1].strip('&source').strip('&um'))
+            print(f"Try '{suggested_city}' instead of '{city}'")
+            exit()
 
 
 def location():
