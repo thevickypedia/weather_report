@@ -3,7 +3,7 @@ import os
 import ssl
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, date
 
 import certifi
 import geopy.geocoders
@@ -14,7 +14,7 @@ city = 'Springfield'
 state = 'Missouri'
 
 
-def two_day_parse():
+def today_parse():
     ctx = ssl.create_default_context(cafile=certifi.where())
     geopy.geocoders.options.default_ssl_context = ctx
     geo_locator = Nominatim(scheme='http', user_agent='test/1', timeout=3)
@@ -31,20 +31,22 @@ def two_day_parse():
     return parse_response, city_info
 
 
-def two_day():
+def today():
     import time
     hourly_data = (response['hourly'])
     output = ''
     for data in hourly_data:
         epoch = data['dt']
         timestamp = time.strftime('%m-%d %H Hrs', time.localtime(epoch))
-        temperature = data['temp']
-        weather = data['weather'][0]['description']
-        feels_like = data['feels_like']
-        temp_f = float(round(pytemperature.k2f(temperature), 2))
-        temp_feel_f = float(round(pytemperature.k2f(feels_like), 2))
-        output += (f'{timestamp}: Current Temperature: {temp_f}°F '
-                   f'Feels Like: {temp_feel_f}°F Condition: {weather}\n')
+        today = date.today().strftime('%m-%d')
+        if today in timestamp:
+            temperature = data['temp']
+            weather = data['weather'][0]['description']
+            feels_like = data['feels_like']
+            temp_f = float(round(pytemperature.k2f(temperature), 2))
+            temp_feel_f = float(round(pytemperature.k2f(feels_like), 2))
+            output += (f'{timestamp}: Actual: {temp_f}°F '
+                       f'Feels Like: {temp_feel_f}°F Condition: {weather}\n')
     output_ = f'{Weather_location}\n{output}'
 
     return output_
@@ -66,8 +68,8 @@ if __name__ == '__main__':
     now = datetime.now()
     dt_string = now.strftime("%A, %B %d, %Y %I:%M %p")
     print(f'{dt_string}\n')
-    response, Weather_location = two_day_parse()
+    response, Weather_location = today_parse()
     print(current_result())
-    user_input = input('\nPress y to view two-day weather report:\n')
+    user_input = input('\nPress y to view the detailed weather report for today:\n')
     if user_input == 'Y' or user_input == 'y':
-        print(f'Two Day Report with per hour interval:\n{two_day()}')
+        print(f"Today's Report with per hour interval:\n{today()}")
