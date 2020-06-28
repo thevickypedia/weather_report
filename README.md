@@ -15,6 +15,6 @@ Click to learn more about [pytemperature](https://pypi.org/project/pytemperature
 
 ## License & copyright
 
-&copy; Vignesh Sivanandha Rao, Robinhood Monitor
+&copy; Vignesh Sivanandha Rao, Weather Report
 
 Licensed under the [MIT License](LICENSE)
