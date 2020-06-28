@@ -12,3 +12,9 @@ This is a fun project using [openweathermap](https://openweathermap.org/api) api
 This project includes reverse geocoding as an add-on, since the api does not return state/county information of the city.
 
 Click to learn more about [pytemperature](https://pypi.org/project/pytemperature/) and [geopy](https://pypi.org/project/geopy/)
+
+## License & copyright
+
+&copy; Vignesh Sivanandha Rao, Robinhood Monitor
+
+Licensed under the [MIT License](LICENSE)
