@@ -1,8 +1,4 @@
-import requests
-from bs4 import BeautifulSoup as bs
-
-url = 'https://www.accuweather.com/en/us/springfield/65806/daily-weather-forecast/329438'
-
-r = requests.get(url)
-scrapped = bs(r.text, "html.parser")
-print(scrapped)
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("127.0.0.1", 80))
+print(s.getsockname())
