@@ -78,6 +78,6 @@ if __name__ == '__main__':
     response, Weather_location = today_parse()
     print(f'{dt_string}\n')
     print(current_result())
-    user_input = input('\nPress y to view the detailed weather report for today:\n')
-    if 'Y' or 'y' in user_input:
-        print(f"Today's Report with per hour interval:\n{today()}")
+    # user_input = input('\nPress y to view the detailed weather report for today:\n')
+    # if 'Y' or 'y' in user_input:
+    print(f"Today's Report with per hour interval:\n{today()}")
