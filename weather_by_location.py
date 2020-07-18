@@ -1,7 +1,7 @@
 import json
 import os
-from urllib.request import urlopen
 from datetime import datetime, date
+from urllib.request import urlopen
 
 import pytemperature
 
@@ -26,7 +26,7 @@ def today_parse():
     return parse_response
 
 
-def today():
+def weather_today():
     import time
     hourly_data = (response['hourly'])
     output = ''
@@ -67,6 +67,4 @@ if __name__ == '__main__':
     response = today_parse()
     print(f'{dt_string}\n')
     print(current_result())
-    # user_input = input('\nPress y to view the detailed weather report for today:\n')
-    # if user_input == 'Y' or user_input == 'y':
-    print(f"\nToday's Report with per hour interval:\n{today()}")
+    print(f"\nToday's Report with per hour interval:\n{weather_today()}")
