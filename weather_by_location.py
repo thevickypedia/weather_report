@@ -1,17 +1,30 @@
 import json
-import os
+import os, time
 from datetime import datetime, date
 from urllib.request import urlopen
+from urllib.error import HTTPError
 
 import pytemperature
 
 
 def get_location():
-    url = 'http://ipinfo.io/json'
-    resp = urlopen(url)
-    data = json.load(resp)
-
-    return data['city'], data['region'], data['country'], data['loc']
+    try:
+        url = 'http://ipinfo.io/json'
+        resp = urlopen(url)
+        data = json.load(resp)
+        return data['city'], data['region'], data['country'], data['loc']
+    except HTTPError:
+        print('Attempting to use API token as either the number of attempts exceeded or you are using an unverified '
+              'internet connection.')
+        time.sleep(.5)
+        try:
+            url = f"https://ipinfo.io/?token0={os.getenv('ip_key')}"
+            resp = urlopen(url)
+            data = json.load(resp)
+            return data['city'], data['region'], data['country'], data['loc']
+        except HTTPError:
+            print('Unable to get your location through ipinfo.io\tCheck your api key and network connection.')
+            exit(1)
 
 
 def today_parse():
