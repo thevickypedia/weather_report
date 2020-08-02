@@ -18,7 +18,6 @@ def today_parse():
     lat = coordinates.split(',')[0]
     lon = coordinates.split(',')[1]
     api_endpoint = "http://api.openweathermap.org/data/2.5/"
-    api_key = os.getenv('api_key')
     url = f'{api_endpoint}onecall?lat={lat}&lon={lon}&exclude=daily,minutely&appid={api_key}'
     r = urlopen(url)  # sends request to the url created
     parse_response = json.loads(r.read())  # loads the response in a json
@@ -60,6 +59,10 @@ def current_result():
 
 
 if __name__ == '__main__':
+    api_key = os.getenv('api_key')
+    if not api_key:
+        print('API Key not found in environment variables. Exiting..')
+        exit(1)
     now = datetime.now()
     dt_string = now.strftime("%A, %B %d, %Y %I:%M %p")
     city, state, country, coordinates = get_location()
