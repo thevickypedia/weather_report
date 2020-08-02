@@ -15,10 +15,9 @@ from geopy.geocoders import Nominatim
 city = 'Springfield'
 
 
-def parseResponse():
+def parseResponse(api_key):
     """This function gets the raw weather information"""
     api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
-    api_key = os.getenv('api_key')
     url = api_endpoint + "?q=" + city + "&appid=" + api_key  # creates an url
     try:
         response = urllib.request.urlopen(url)  # sends request to the url created
@@ -100,9 +99,13 @@ def result():
 
 
 if __name__ == '__main__':
+    api_key = os.getenv('api_key')
+    if not api_key:
+        print('API Key not found in environment variables. Exiting..')
+        exit(1)
     now = datetime.now()
     dt_string = now.strftime("%A, %B %d, %Y %I:%M %p")
-    parseResponse = parseResponse()
+    parseResponse = parseResponse(api_key)
     location = location()
     print(f'{dt_string}\n')
     print(result())
