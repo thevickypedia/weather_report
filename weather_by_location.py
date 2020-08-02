@@ -18,7 +18,7 @@ def get_location():
               'internet connection.')
         time.sleep(.5)
         try:
-            url = f"https://ipinfo.io/?token0={os.getenv('ip_key')}"
+            url = f"https://ipinfo.io/?token={os.getenv('ip_key')}"
             resp = urlopen(url)
             data = json.load(resp)
             return data['city'], data['region'], data['country'], data['loc']
